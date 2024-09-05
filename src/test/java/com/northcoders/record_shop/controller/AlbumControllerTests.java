@@ -47,7 +47,7 @@ public class AlbumControllerTests {
     }
 
     @Test
-    void getAllAlbums() throws Exception{
+    void testGetAllAlbums() throws Exception{
         List<Album> albums = new ArrayList<>();
         Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
         Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
@@ -69,7 +69,7 @@ public class AlbumControllerTests {
     }
 
     @Test
-    void getAlbumById_IdExists() throws Exception{
+    void testGetAlbumById_IdExists() throws Exception{
         Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
 
         when(mockAlbumServiceImpl.getAlbumById(1L)).thenReturn(album1);
@@ -85,7 +85,7 @@ public class AlbumControllerTests {
     }
 
     @Test
-    void getAlbumById_IdNotExists() throws Exception{
+    void testGetAlbumById_IdNotExists() throws Exception{
         Long idNotExists = 100L;
         String errorMessage = String.format("The album with id %d cannot be found", idNotExists);
 
@@ -95,4 +95,6 @@ public class AlbumControllerTests {
                 .andExpect(status().isNotFound())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(errorMessage));
     }
+
+
 }
