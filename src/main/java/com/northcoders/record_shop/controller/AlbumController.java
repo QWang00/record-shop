@@ -1,5 +1,6 @@
 package com.northcoders.record_shop.controller;
 
+import com.northcoders.record_shop.exception.ItemNotFoundException;
 import com.northcoders.record_shop.model.Album;
 import com.northcoders.record_shop.service.AlbumService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class AlbumController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Album> getAlbumById(@PathVariable Long id){
-        return new ResponseEntity<>(albumService.getAlbumById(id), HttpStatus.OK);
+    public ResponseEntity<Album> getAlbumById(@PathVariable("id") Long id){
+            return new ResponseEntity<>(albumService.getAlbumById(id), HttpStatus.OK);
     }
 
 }
