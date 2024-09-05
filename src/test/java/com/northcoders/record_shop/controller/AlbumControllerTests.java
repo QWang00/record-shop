@@ -96,5 +96,22 @@ public class AlbumControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(errorMessage));
     }
 
+    @Test
+    void testAddAlbum() throws Exception{
+        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumServiceImpl.addAlbum(album)).thenReturn(albumWithId);
+        this.mockMvcController.perform(MockMvcRequestBuilders.post("/albums")
+                        .contentType("application/json")
+                        .content(mapper.writeValueAsString(album)))
+                .andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("The Beatles"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Abbey Road"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.releaseYear").value(1969))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(Album.AlbumGenres.ROCK.toString()));
+
+    }
+
 
 }
