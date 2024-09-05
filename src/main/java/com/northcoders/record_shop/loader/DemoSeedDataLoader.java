@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class DemoDataLoader {
 
-    @Bean
+    @Bean(name = "demoDataLoader")
     public CommandLineRunner demoDataLoader(AlbumRepository albumRepository) {
         return args -> {
             albumRepository.deleteAll();
