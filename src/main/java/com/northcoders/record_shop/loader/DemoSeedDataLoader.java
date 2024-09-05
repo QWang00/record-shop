@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class DemoDataLoader {
+public class DemoSeedDataLoader {
 
     @Bean(name = "demoDataLoader")
     public CommandLineRunner demoDataLoader(AlbumRepository albumRepository) {
