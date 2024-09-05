@@ -32,6 +32,7 @@ public class Album {
     @Column
     int releaseYear;
 
+    @Enumerated(EnumType.STRING)
     @Column
     AlbumGenres genre;
 
