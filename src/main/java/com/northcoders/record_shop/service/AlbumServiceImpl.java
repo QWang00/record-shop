@@ -32,6 +32,12 @@ public class AlbumServiceImpl implements AlbumService {
             return album.get();
         }
         throw new ItemNotFoundException(String.format("The album with id '%s' cannot be found", id));
-    };
+    }
+
+    @Override
+    public Album addAlbum(Album album) {
+        return albumRepository.save(album);
+    }
+
 
 }
