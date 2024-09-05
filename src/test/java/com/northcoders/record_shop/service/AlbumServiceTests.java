@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class AlbumServiceTests {
@@ -55,7 +55,7 @@ public class AlbumServiceTests {
     }
 
     @Test
-    void testGetAlbumById_IdExists(){
+    void testGetAlbumById_IdFound(){
         Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
 
         when(mockAlbumRepository.findById(1L)).thenReturn(Optional.of(album1));
@@ -68,8 +68,26 @@ public class AlbumServiceTests {
 
     }
 
+    @Test
+    void testAddAlbum(){
+        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumRepository.save(album)).thenReturn(albumWithId);
+
+        Album actualResult = albumServiceImpl.addAlbum(album);
+        verify(mockAlbumRepository, times(1)).save(album);
+        assertThat(actualResult.getId() == 1L);
+        assertThat(actualResult.getArtist().equals("The Beatles"));
+        assertThat(actualResult.getName().equals("Abbey Road"));
+        assertThat(actualResult.getReleaseYear() == 1969);
+        assertThat(actualResult.getGenre().equals(Album.AlbumGenres.ROCK));
+    }
+
+    }
 
 
 
 
-}
+
+
