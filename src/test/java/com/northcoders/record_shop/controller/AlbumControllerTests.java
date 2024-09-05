@@ -55,7 +55,27 @@ public class AlbumControllerTests {
                 .andExpect((MockMvcResultMatchers.status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value(1994))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("What's the Story Morning Glory?"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("What's the Story Morning Glory?"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value(1995));
+    }
+
+    @Test
+    void getAlbumById_IdExists() throws Exception{
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+
+        when(mockAlbumServiceImpl.getAlbumById(1L)).thenReturn(album1);
+        this.mockMvcController.perform(
+                MockMvcRequestBuilders.get("/albums/1"))
+                .andExpect((MockMvcResultMatchers.status().isOk()))
+                .andExpect((MockMvcResultMatchers.jsonPath("$.id").value(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.releaseYear").value(1994));
+
+
     }
 }
