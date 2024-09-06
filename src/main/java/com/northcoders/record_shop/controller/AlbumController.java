@@ -22,30 +22,36 @@ public class AlbumController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Album>> getAllAlums (){
+    public ResponseEntity<List<Album>> getAllAlums() {
         return new ResponseEntity<>(albumService.getAllAlbums(), HttpStatus.OK);
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Album> getAlbumById(@PathVariable("id") Long id){
-            return new ResponseEntity<>(albumService.getAlbumById(id), HttpStatus.OK);
+    public ResponseEntity<Album> getAlbumById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(albumService.getAlbumById(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Album> addAlbum (@RequestBody Album album){
+    public ResponseEntity<Album> addAlbum(@RequestBody Album album) {
         Album addedAlbum = albumService.addAlbum(album);
         return new ResponseEntity<>(addedAlbum, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Album> updateAlbumById(@PathVariable("id") Long id, @RequestBody Album album){
+    public ResponseEntity<Album> updateAlbumById(@PathVariable("id") Long id, @RequestBody Album album) {
         return new ResponseEntity<>(albumService.updateAlbumById(id, album), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteAlbumById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(albumService.deleteAlbumById(id), HttpStatus.OK);
+    }
+
+    @GetMapping(params = "artist")
+    public ResponseEntity<List<Album>> getAlbumsByArtist(@RequestParam String artist) {
+        List<Album> albums = albumService.getAlbumsByArtist(artist);
+        return new ResponseEntity<>(albums, HttpStatus.OK);
     }
 
 }
