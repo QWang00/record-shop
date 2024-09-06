@@ -60,4 +60,15 @@ public class AlbumController {
         return new ResponseEntity<>(albums, HttpStatus.OK);
     }
 
+    @GetMapping(params = "genre")
+    public ResponseEntity<List<Album>> getAlbumsByGenre(@RequestParam String genre){
+        try {
+            Album.AlbumGenres albumGenre = Album.AlbumGenres.valueOf(genre.toUpperCase());
+            List<Album> albums = albumService.getAlbumsByGenre(albumGenre);
+            return new ResponseEntity<>(albums, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            throw new ItemNotFoundException(String.format("Genre '%s' is not recognized.", genre));
+        }
+    }
+
 }
