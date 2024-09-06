@@ -54,4 +54,10 @@ public class AlbumController {
         return new ResponseEntity<>(albums, HttpStatus.OK);
     }
 
+    @GetMapping(params = "releaseYear")
+    public ResponseEntity<List<Album>> getAlbumsByReleaseYear(@RequestParam int releaseYear){
+        List<Album> albums = albumService.getAlbumsByReleaseYear(releaseYear);
+        return new ResponseEntity<>(albums, HttpStatus.OK);
+    }
+
 }
