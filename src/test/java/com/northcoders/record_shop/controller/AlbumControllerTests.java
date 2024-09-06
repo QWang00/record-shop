@@ -293,5 +293,43 @@ public class AlbumControllerTests {
                 .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
 
+    @Test
+    void testGetAlbumsByName_NameNotFound() throws Exception {
+        String nameNotExists = "Not";
+        String errorMessage = String.format("Cannot find albums with the name of '%s'.", nameNotExists);
+
+        when(mockAlbumServiceImpl.getAlbumsByName(nameNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?name=Not"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(errorMessage));
+
+    }
+
+    @Test
+    void testGetAlbumsByName_NameFound() throws Exception {
+        List<Album> albums = new ArrayList<>();
+        Album album1 = new Album(1L, "Oasis", 1999, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        albums.add(album1);
+        albums.add(album2);
+        when(mockAlbumServiceImpl.getAlbumsByName("Definitely Maybe")).thenReturn(albums);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.get("/albums?name=Definitely Maybe"))
+                .andExpect((status().isOk()))
+                .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value(1999))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value(1995));
+
+    }
+
 
 }
