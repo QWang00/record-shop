@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -19,12 +20,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-@AutoConfigureMockMvc
 @SpringBootTest
+@AutoConfigureMockMvc
 public class AlbumControllerTests {
 
     @Mock
@@ -111,6 +114,36 @@ public class AlbumControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.releaseYear").value(1969))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(Album.AlbumGenres.ROCK.toString()));
 
+    }
+
+    @Test
+    void testUpdateAlbumById_AlbumIdNotFound() throws Exception{
+        Long idNotExists = 100L;
+        String errorMessage = String.format("The album with id %d cannot be found", idNotExists);
+        Album album = new Album(idNotExists,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumServiceImpl.updateAlbumById(idNotExists, album)).thenThrow(new ItemNotFoundException(errorMessage));
+        this.mockMvcController.perform(MockMvcRequestBuilders.put("/albums/" + idNotExists)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(album)))
+                .andExpect(status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(errorMessage));
+    }
+
+    @Test
+    void testUpdateAlbumById_AlbumFound() throws Exception{
+        Album albumFound = new Album(1L,"The Beatles?" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road!");
+        Album albumUpdated= new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumServiceImpl.updateAlbumById(eq(1L), any(Album.class))).thenReturn(albumUpdated);
+        this.mockMvcController.perform(MockMvcRequestBuilders.put("/albums/1")
+                        .contentType("application/json")
+                        .content(mapper.writeValueAsString(albumUpdated)))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.artist").value("The Beatles"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Abbey Road"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.releaseYear").value(1969))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(Album.AlbumGenres.ROCK.toString()));
     }
 
 
