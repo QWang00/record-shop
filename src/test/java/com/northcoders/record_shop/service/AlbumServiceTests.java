@@ -115,6 +115,37 @@ public class AlbumServiceTests {
         verify(mockAlbumRepository).save(albumUpdated);
     }
 
+    @Test
+    void testDeleteAlbumById_AlbumIdNotExists(){
+        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumRepository.findById(100L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> albumServiceImpl.deleteAlbumById(100L))
+                .isInstanceOf(ItemNotFoundException.class)
+                .hasMessage("The album with id '100' cannot be found");
+        verify(mockAlbumRepository, never()).delete(any(Album.class));
+    }
+
+    @Test
+    void testDeleteAlbumById_AlbumFound(){
+
+        Long albumId = 1L;
+        Album album = new Album(albumId,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        String expectedMessage = "Album with ID " + albumId + " is deleted successfully.";
+        when(mockAlbumRepository.findById(albumId)).thenReturn(Optional.of(album));
+        doNothing().when(mockAlbumRepository).deleteById(albumId);
+
+        String actualResult = albumServiceImpl.deleteAlbumById(albumId);
+
+        assertThat(actualResult.equals(expectedMessage ));
+        verify(mockAlbumRepository).deleteById(albumId);
+    }
+
+
+
+
+
 }
 
 
