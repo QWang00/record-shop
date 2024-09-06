@@ -38,4 +38,9 @@ public class AlbumController {
         return new ResponseEntity<>(addedAlbum, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Album> updateAlbumById(@PathVariable("id") Long id, @RequestBody Album album){
+        return new ResponseEntity<>(albumService.updateAlbumById(id, album), HttpStatus.OK);
+    }
+
 }
