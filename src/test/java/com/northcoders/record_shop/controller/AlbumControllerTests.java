@@ -244,6 +244,54 @@ public class AlbumControllerTests {
 
     }
 
+    @Test
+    void testGetAlbumsByGenre_AlbumsFoundInThisGenre() throws Exception {
+        List<Album> albums = new ArrayList<>();
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        albums.add(album1);
+        albums.add(album2);
+        when(mockAlbumServiceImpl.getAlbumsByGenre(Album.AlbumGenres.BRITPOP)).thenReturn(albums);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.get("/albums?genre=BRITPOP"))
+                .andExpect((status().isOk()))
+                .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value(1995))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("What's the Story Morning Glory?"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value(1995));
+
+    }
+
+    @Test
+    void testGetAlbumsByGenre_GenreExistsButNoAlbumsInThisGenre() throws Exception {
+        String genre = "ROCK";
+        String errorMessage = String.format("Cannot find albums in '%s'.", genre);
+
+        when(mockAlbumServiceImpl.getAlbumsByGenre(Album.AlbumGenres.ROCK))
+                .thenThrow(new ItemNotFoundException(errorMessage));
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?genre=ROCK"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string(errorMessage));
+    }
+
+    @Test
+    void testGetAlbumsByGenre_GenreNotRecognised() throws Exception {
+        String invalidGenre = "HIPPOP";
+        String errorMessage = String.format("Genre '%s' is not recognized.", invalidGenre);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?genre=HIPPOP")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.content().string(errorMessage));
+    }
 
 
 }
