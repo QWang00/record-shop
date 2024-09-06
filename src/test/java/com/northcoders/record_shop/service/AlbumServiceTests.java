@@ -175,6 +175,41 @@ public class AlbumServiceTests {
 
     }
 
+    @Test
+    void testGetAlbumsByReleaseYear_ReleaseYearNotFound(){
+        int releaseYearNotExists = 1000;
+        when(mockAlbumRepository.findByReleaseYear(releaseYearNotExists)).thenReturn(new ArrayList<>());
+
+        assertThatThrownBy(()-> albumServiceImpl.getAlbumsByReleaseYear(releaseYearNotExists))
+                .isInstanceOf(ItemNotFoundException.class)
+                .hasMessage(String.format("Cannot find albums released in year '%s'.", releaseYearNotExists));
+
+    }
+
+    @Test
+    void testGetAlbumsByReleaseYear_ReleaseYearFound(){
+        List<Album> albums = new ArrayList<>();
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        albums.add(album1);
+        albums.add(album2);
+        when(mockAlbumRepository.findByReleaseYear(1995)).thenReturn(albums);
+        List<Album> actualResult = albumServiceImpl.getAlbumsByReleaseYear(1995);
+        assertThat(actualResult).isEqualTo(albums);
+        assertThat(actualResult).hasSize(2);
+        assertThat(actualResult.get(0).getName().equals("Definitely Maybe"));
+        assertThat(actualResult.get(0).getArtist().equals("Oasis"));
+        assertThat(actualResult.get(0).getGenre().equals(Album.AlbumGenres.BRITPOP));
+        assertThat(actualResult.get(0).getReleaseYear() == 1995);
+        assertThat(actualResult.get(1).getName().equals("What's the Story Morning Glory?"));
+        assertThat(actualResult.get(1).getArtist().equals("Oasis"));
+        assertThat(actualResult.get(1).getGenre().equals(Album.AlbumGenres.BRITPOP));
+        assertThat(actualResult.get(1).getReleaseYear() == 1995);
+
+    }
+
+
+
 
 
 }
