@@ -73,5 +73,14 @@ public class AlbumServiceImpl implements AlbumService {
         return albums;
     }
 
+    @Override
+    public List<Album> getAlbumsByGenre(Album.AlbumGenres genre) {
+        List<Album> albums = albumRepository.findByGenre(genre);
+        if (albums.isEmpty()) {
+            throw new ItemNotFoundException(String.format("Cannot find albums in '%s'.", genre));
+        }
+        return albums;
+    }
+
 
 }
