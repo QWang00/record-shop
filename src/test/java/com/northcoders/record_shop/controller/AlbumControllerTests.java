@@ -60,7 +60,7 @@ public class AlbumControllerTests {
 
         when(mockAlbumServiceImpl.getAllAlbums()).thenReturn(albums);
         this.mockMvcController.perform(
-                MockMvcRequestBuilders.get("/albums"))
+                MockMvcRequestBuilders.get("/albums/all"))
                 .andExpect((status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
@@ -175,7 +175,7 @@ public class AlbumControllerTests {
 
         when(mockAlbumServiceImpl.getAlbumsByArtist(artistNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?artist=John"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums/by-artist?artist=John"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(errorMessage));
 
@@ -191,7 +191,7 @@ public class AlbumControllerTests {
         when(mockAlbumServiceImpl.getAlbumsByArtist("Oasis")).thenReturn(albums);
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.get("/albums?artist=Oasis"))
+                        MockMvcRequestBuilders.get("/albums/by-artist?artist=Oasis"))
                 .andExpect((status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
@@ -213,7 +213,7 @@ public class AlbumControllerTests {
 
         when(mockAlbumServiceImpl.getAlbumsByReleaseYear(releaseYearNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?releaseYear=1000"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums/by-release-year?releaseYear=1000"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(errorMessage));
 
@@ -229,7 +229,7 @@ public class AlbumControllerTests {
         when(mockAlbumServiceImpl.getAlbumsByReleaseYear(1995)).thenReturn(albums);
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.get("/albums?releaseYear=1995"))
+                        MockMvcRequestBuilders.get("/albums/by-release-year?releaseYear=1995"))
                 .andExpect((status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
@@ -254,7 +254,7 @@ public class AlbumControllerTests {
         when(mockAlbumServiceImpl.getAlbumsByGenre(Album.AlbumGenres.BRITPOP)).thenReturn(albums);
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.get("/albums?genre=BRITPOP"))
+                        MockMvcRequestBuilders.get("/albums/by-genre?genre=BRITPOP"))
                 .andExpect((status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
@@ -277,7 +277,7 @@ public class AlbumControllerTests {
         when(mockAlbumServiceImpl.getAlbumsByGenre(Album.AlbumGenres.ROCK))
                 .thenThrow(new ItemNotFoundException(errorMessage));
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?genre=ROCK"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums/by-genre?genre=ROCK"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string(errorMessage));
     }
@@ -287,7 +287,7 @@ public class AlbumControllerTests {
         String invalidGenre = "HIPPOP";
         String errorMessage = String.format("Genre '%s' is not recognized.", invalidGenre);
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?genre=HIPPOP")
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums/by-genre?genre=HIPPOP")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string(errorMessage));
@@ -300,7 +300,7 @@ public class AlbumControllerTests {
 
         when(mockAlbumServiceImpl.getAlbumsByName(nameNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
 
-        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?name=Not"))
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums/by-name?name=Not"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(errorMessage));
 
@@ -316,7 +316,7 @@ public class AlbumControllerTests {
         when(mockAlbumServiceImpl.getAlbumsByName("Definitely Maybe")).thenReturn(albums);
 
         this.mockMvcController.perform(
-                        MockMvcRequestBuilders.get("/albums?name=Definitely Maybe"))
+                        MockMvcRequestBuilders.get("/albums/by-name?name=Definitely Maybe"))
                 .andExpect((status().isOk()))
                 .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
