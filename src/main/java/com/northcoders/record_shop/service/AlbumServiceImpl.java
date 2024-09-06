@@ -82,5 +82,12 @@ public class AlbumServiceImpl implements AlbumService {
         return albums;
     }
 
+    @Override
+    public List<Album> getAlbumsByName(String name) {
+        List<Album> albums = albumRepository.findByName(name);
+        if(albums.isEmpty()) throw new ItemNotFoundException(String.format("Cannot find albums with the name of '%s'.", name));
+        return albums;
+    }
+
 
 }
