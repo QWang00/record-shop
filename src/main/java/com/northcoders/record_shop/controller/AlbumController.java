@@ -71,4 +71,10 @@ public class AlbumController {
         }
     }
 
+    @GetMapping(params = "name")
+    public ResponseEntity<List<Album>> getAlbumsByName(@RequestParam String name){
+        List<Album> albums = albumService.getAlbumsByName(name);
+        return new ResponseEntity<>(albums, HttpStatus.OK);
+    }
+
 }
