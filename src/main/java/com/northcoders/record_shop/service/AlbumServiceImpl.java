@@ -66,5 +66,12 @@ public class AlbumServiceImpl implements AlbumService {
         return albums;
     }
 
+    @Override
+    public List<Album> getAlbumsByReleaseYear(int releaseYear) {
+        List<Album> albums = albumRepository.findByReleaseYear(releaseYear);
+        if(albums.isEmpty()) throw new ItemNotFoundException(String.format("Cannot find albums released in year '%s'.", releaseYear));
+        return albums;
+    }
+
 
 }
