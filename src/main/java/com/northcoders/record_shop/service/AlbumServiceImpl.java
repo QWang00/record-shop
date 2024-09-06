@@ -59,5 +59,12 @@ public class AlbumServiceImpl implements AlbumService {
         return ("Album with ID " + id + " is deleted successfully.");
     }
 
+    @Override
+    public List<Album> getAlbumsByArtist(String artist) {
+        List<Album> albums = albumRepository.findByArtist(artist);
+        if(albums.isEmpty()) throw new ItemNotFoundException(String.format("Cannot find albums for artist '%s'.", artist));
+        return albums;
+    }
+
 
 }
