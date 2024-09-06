@@ -17,15 +17,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AlbumControllerTests {
@@ -144,6 +142,17 @@ public class AlbumControllerTests {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Abbey Road"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.releaseYear").value(1969))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.genre").value(Album.AlbumGenres.ROCK.toString()));
+    }
+
+    @Test
+    void testDeleteAlbumById_AlbumFound() throws Exception{
+        Long albumId = 1L;
+        String expectedMessage = "Album with ID " + albumId + " is deleted successfully.";
+        when(mockAlbumServiceImpl.deleteAlbumById(albumId)).thenReturn(expectedMessage);
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/albums/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expectedMessage));
     }
 
 
