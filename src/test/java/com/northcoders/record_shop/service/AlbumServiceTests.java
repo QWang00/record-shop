@@ -15,6 +15,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -84,7 +85,37 @@ public class AlbumServiceTests {
         assertThat(actualResult.getGenre().equals(Album.AlbumGenres.ROCK));
     }
 
+    @Test
+    void testUpdateAlbumById_AlbumIdNotExists(){
+        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+
+        when(mockAlbumRepository.findById(100L)).thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> albumServiceImpl.updateAlbumById(100L, album))
+                .isInstanceOf(ItemNotFoundException.class)
+                .hasMessage("The album with id '100' cannot be found");
+        verify(mockAlbumRepository, never()).save(any(Album.class));
     }
+
+    @Test
+    void testUpdateAlbumById_AlbumFound(){
+        Album albumFound = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album albumUpdated = new Album(100L,"The Beatles!" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road?");
+
+        when(mockAlbumRepository.findById(100L)).thenReturn(Optional.of(albumFound));
+        when(mockAlbumRepository.save(any(Album.class))).thenReturn(albumUpdated);
+
+        Album actualResult = albumServiceImpl.updateAlbumById(100L, albumUpdated);
+
+        assertThat(actualResult.getId() == 100L);
+        assertThat(actualResult.getArtist().equals("The Beatles!"));
+        assertThat(actualResult.getName().equals("Abbey Road?"));
+        assertThat(actualResult.getReleaseYear() == 1968);
+        assertThat(actualResult.getGenre().equals(Album.AlbumGenres.BRITPOP));
+        verify(mockAlbumRepository).save(albumUpdated);
+    }
+
+}
 
 
 
