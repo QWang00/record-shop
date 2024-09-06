@@ -39,5 +39,17 @@ public class AlbumServiceImpl implements AlbumService {
         return albumRepository.save(album);
     }
 
+    @Override
+    public Album updateAlbumById(Long id, Album album) {
+        Optional<Album> optionalAlbum = albumRepository.findById(id);
+        if(optionalAlbum.isEmpty()) throw new ItemNotFoundException(String.format("The album with id '%s' cannot be found", id));
+        Album albumFound = optionalAlbum.get();
+        albumFound.setArtist(album.getArtist());
+        albumFound.setGenre(album.getGenre());
+        albumFound.setName(album.getName());
+        albumFound.setReleaseYear(album.getReleaseYear());
+        return albumRepository.save(albumFound);
+    }
+
 
 }
