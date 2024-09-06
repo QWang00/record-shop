@@ -20,4 +20,6 @@ public interface AlbumService {
     List<Album> getAlbumsByReleaseYear(int releaseYear);
 
     List<Album> getAlbumsByGenre(Album.AlbumGenres genre);
+
+    List<Album> getAlbumsByName(String name);
 }

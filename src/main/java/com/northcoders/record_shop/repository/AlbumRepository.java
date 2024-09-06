@@ -13,4 +13,6 @@ public interface AlbumRepository extends CrudRepository<Album, Long> {
     List<Album> findByReleaseYear(int releaseYear);
 
     List<Album> findByGenre(Album.AlbumGenres genre);
+
+    List<Album> findByName(String name);
 }
