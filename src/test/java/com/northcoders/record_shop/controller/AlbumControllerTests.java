@@ -155,5 +155,15 @@ public class AlbumControllerTests {
                 .andExpect(content().string(expectedMessage));
     }
 
+    @Test
+    void testDeleteAlbumById_AlbumIdNotExists() throws Exception{
+        Long idNotExists = 100L;
+        String errorMessage = String.format("The album with id %d cannot be found", idNotExists);
+        when(mockAlbumServiceImpl.deleteAlbumById(idNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
+        this.mockMvcController.perform(MockMvcRequestBuilders.delete("/albums/100"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(errorMessage));
+    }
+
 
 }
