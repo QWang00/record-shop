@@ -18,7 +18,8 @@ public class Album {
     public enum AlbumGenres {
         BRITPOP,
         ROCK,
-        ALTERNATIVE_ROCK
+        ALTERNATIVE_ROCK,
+        CLASSIC
     }
 
     @Id
