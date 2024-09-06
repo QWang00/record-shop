@@ -51,5 +51,13 @@ public class AlbumServiceImpl implements AlbumService {
         return albumRepository.save(albumFound);
     }
 
+    @Override
+    public String deleteAlbumById(Long id) {
+        Optional<Album> optionalAlbum = albumRepository.findById(id);
+        if(optionalAlbum.isEmpty()) throw new ItemNotFoundException(String.format("The album with id '%s' cannot be found", id));
+        albumRepository.deleteById(id);
+        return ("Album with ID " + id + " is deleted successfully.");
+    }
+
 
 }
