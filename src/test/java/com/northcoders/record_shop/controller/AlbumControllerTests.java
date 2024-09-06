@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -163,6 +166,44 @@ public class AlbumControllerTests {
         this.mockMvcController.perform(MockMvcRequestBuilders.delete("/albums/100"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(errorMessage));
+    }
+
+    @Test
+    void testGetAlbumsByArtist_ArtistNotFound() throws Exception {
+        String artistNotExists = "John";
+        String errorMessage = String.format("Cannot find albums for artist '%s'.", artistNotExists);
+
+        when(mockAlbumServiceImpl.getAlbumsByArtist(artistNotExists)).thenThrow(new ItemNotFoundException(errorMessage));
+
+        this.mockMvcController.perform(MockMvcRequestBuilders.get("/albums?artist=John"))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(errorMessage));
+
+    }
+
+    @Test
+    void testGetAlbumsByArtist_ArtistFound() throws Exception {
+        List<Album> albums = new ArrayList<>();
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        albums.add(album1);
+        albums.add(album2);
+        when(mockAlbumServiceImpl.getAlbumsByArtist("Oasis")).thenReturn(albums);
+
+        this.mockMvcController.perform(
+                        MockMvcRequestBuilders.get("/albums?artist=Oasis"))
+                .andExpect((status().isOk()))
+                .andExpect((MockMvcResultMatchers.jsonPath("$[0].id").value(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].name").value("Definitely Maybe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].releaseYear").value(1994))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].id").value(2))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].name").value("What's the Story Morning Glory?"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].artist").value("Oasis"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].genre").value(Album.AlbumGenres.BRITPOP.toString()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].releaseYear").value(1995));
+
     }
 
 
