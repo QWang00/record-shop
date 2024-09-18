@@ -48,6 +48,7 @@ public class AlbumServiceImpl implements AlbumService {
         albumFound.setGenre(album.getGenre());
         albumFound.setName(album.getName());
         albumFound.setReleaseYear(album.getReleaseYear());
+        albumFound.setImageUrl(album.getImageUrl());
         return albumRepository.save(albumFound);
     }
 
@@ -88,6 +89,16 @@ public class AlbumServiceImpl implements AlbumService {
         if(albums.isEmpty()) throw new ItemNotFoundException(String.format("Cannot find albums with the name of '%s'.", name));
         return albums;
     }
+
+    @Override
+    public Album updateImageById(Long albumId, String imageUrl) {
+        Album album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new ItemNotFoundException(String.format("The album with id '%s' cannot be found", albumId)));
+
+        album.setImageUrl(imageUrl);
+        return albumRepository.save(album);
+    }
+
 
 
 }
