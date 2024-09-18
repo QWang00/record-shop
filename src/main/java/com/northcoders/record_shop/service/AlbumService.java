@@ -22,4 +22,5 @@ public interface AlbumService {
     List<Album> getAlbumsByGenre(Album.AlbumGenres genre);
 
     List<Album> getAlbumsByName(String name);
+    Album updateImageById(Long albumId, String imageUrl);
 }
