@@ -129,4 +129,17 @@ public class AlbumController {
         List<Album> albums = albumService.getAlbumsByName(name);
         return new ResponseEntity<>(albums, HttpStatus.OK);
     }
+
+    @Operation(summary = "Update album image by ID", description = "Update an existing album's image by its ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Image updated successfully"),
+            @ApiResponse(responseCode = "404", description = "Album not found"),
+            @ApiResponse(responseCode = "400", description = "Bad request"),
+            @ApiResponse(responseCode = "500", description = "Internal server error")
+    })
+    @PutMapping("/{id}/image")
+    public ResponseEntity<Album> updateAlbumImage(@PathVariable Long id, @RequestParam String imageUrl) {
+        Album updatedAlbum = albumService.updateImageById(id, imageUrl);
+        return ResponseEntity.ok(updatedAlbum);
+    }
 }
