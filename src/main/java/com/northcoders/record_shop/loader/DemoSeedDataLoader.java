@@ -15,7 +15,7 @@ public class DemoSeedDataLoader {
             albumRepository.deleteAll();
 
             albumRepository.save(new Album(null, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg" ));
-            albumRepository.save(new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/What's+the+Story+Morning+Glory%3F%22.jpeg"));
+            albumRepository.save(new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/What%27s+the+Story+Morning+Glory%3F%22.jpeg"));
             albumRepository.save(new Album(null, "The Beatles", 1968, Album.AlbumGenres.ROCK, "The White Album", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/The+White+Album.jpeg"));
             albumRepository.save(new Album(null, "The Beatles", 1969, Album.AlbumGenres.ROCK, "Abbey Road", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/Abbey+Road.jpeg"));
             albumRepository.save(new Album(null, "Suede", 1996, Album.AlbumGenres.BRITPOP, "Coming Up", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/Coming+Up.jpeg"));
