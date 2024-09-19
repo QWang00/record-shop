@@ -32,8 +32,8 @@ public class AlbumServiceTests {
     @Test
     void testGetAllAlbums_ReturnsListOfAlbums(){
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(null, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(null, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
 
@@ -57,7 +57,7 @@ public class AlbumServiceTests {
 
     @Test
     void testGetAlbumById_IdFound(){
-        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumRepository.findById(1L)).thenReturn(Optional.of(album1));
         Album actualResult = albumServiceImpl.getAlbumById(1L);
@@ -71,8 +71,8 @@ public class AlbumServiceTests {
 
     @Test
     void testAddAlbum(){
-        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
-        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumRepository.save(album)).thenReturn(albumWithId);
 
@@ -87,7 +87,7 @@ public class AlbumServiceTests {
 
     @Test
     void testUpdateAlbumById_AlbumIdNotExists(){
-        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumRepository.findById(100L)).thenReturn(Optional.empty());
 
@@ -99,8 +99,8 @@ public class AlbumServiceTests {
 
     @Test
     void testUpdateAlbumById_AlbumFound(){
-        Album albumFound = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
-        Album albumUpdated = new Album(100L,"The Beatles!" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road?");
+        Album albumFound = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album albumUpdated = new Album(100L,"The Beatles!" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumRepository.findById(100L)).thenReturn(Optional.of(albumFound));
         when(mockAlbumRepository.save(any(Album.class))).thenReturn(albumUpdated);
@@ -117,7 +117,7 @@ public class AlbumServiceTests {
 
     @Test
     void testDeleteAlbumById_AlbumIdNotExists(){
-        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(100L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumRepository.findById(100L)).thenReturn(Optional.empty());
 
@@ -131,7 +131,7 @@ public class AlbumServiceTests {
     void testDeleteAlbumById_AlbumFound(){
 
         Long albumId = 1L;
-        Album album = new Album(albumId,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(albumId,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         String expectedMessage = "Album with ID " + albumId + " is deleted successfully.";
         when(mockAlbumRepository.findById(albumId)).thenReturn(Optional.of(album));
         doNothing().when(mockAlbumRepository).deleteById(albumId);
@@ -156,8 +156,8 @@ public class AlbumServiceTests {
     @Test
     void testGetAlbumsByArtist_ArtistFound(){
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(null, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumRepository.findByArtist("Oasis")).thenReturn(albums);
@@ -189,8 +189,8 @@ public class AlbumServiceTests {
     @Test
     void testGetAlbumsByReleaseYear_ReleaseYearFound(){
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumRepository.findByReleaseYear(1995)).thenReturn(albums);
@@ -222,8 +222,8 @@ public class AlbumServiceTests {
     @Test
     void testGetAlbumsByGenre_AlbumsFound(){
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumRepository.findByGenre(Album.AlbumGenres.BRITPOP)).thenReturn(albums);
@@ -255,8 +255,8 @@ public class AlbumServiceTests {
     @Test
     void testGetAlbumsByName_NameFound(){
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1999, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album1 = new Album(1L, "Oasis", 1999, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumRepository.findByName("Definitely Maybe")).thenReturn(albums);
