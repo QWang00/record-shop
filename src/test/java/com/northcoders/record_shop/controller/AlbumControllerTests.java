@@ -53,8 +53,8 @@ public class AlbumControllerTests {
     @Test
     void testGetAllAlbums() throws Exception{
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
 
@@ -74,7 +74,7 @@ public class AlbumControllerTests {
 
     @Test
     void testGetAlbumById_IdExists() throws Exception{
-        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumServiceImpl.getAlbumById(1L)).thenReturn(album1);
         this.mockMvcController.perform(
@@ -102,8 +102,8 @@ public class AlbumControllerTests {
 
     @Test
     void testAddAlbum() throws Exception{
-        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
-        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(null,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album albumWithId = new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumServiceImpl.addAlbum(album)).thenReturn(albumWithId);
         this.mockMvcController.perform(MockMvcRequestBuilders.post("/albums")
@@ -121,7 +121,7 @@ public class AlbumControllerTests {
     void testUpdateAlbumById_AlbumIdNotFound() throws Exception{
         Long idNotExists = 100L;
         String errorMessage = String.format("The album with id %d cannot be found", idNotExists);
-        Album album = new Album(idNotExists,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album album = new Album(idNotExists,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
 
         when(mockAlbumServiceImpl.updateAlbumById(idNotExists, album)).thenThrow(new ItemNotFoundException(errorMessage));
         this.mockMvcController.perform(MockMvcRequestBuilders.put("/albums/" + idNotExists)
@@ -133,8 +133,8 @@ public class AlbumControllerTests {
 
     @Test
     void testUpdateAlbumById_AlbumFound() throws Exception{
-        Album albumFound = new Album(1L,"The Beatles?" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road!");
-        Album albumUpdated= new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road");
+        Album albumFound = new Album(1L,"The Beatles?" , 1968, Album.AlbumGenres.BRITPOP,"Abbey Road!","Definitely Maybe");
+        Album albumUpdated= new Album(1L,"The Beatles" , 1969, Album.AlbumGenres.ROCK,"Abbey Road","Definitely Maybe");
 
         when(mockAlbumServiceImpl.updateAlbumById(eq(1L), any(Album.class))).thenReturn(albumUpdated);
         this.mockMvcController.perform(MockMvcRequestBuilders.put("/albums/1")
@@ -184,8 +184,8 @@ public class AlbumControllerTests {
     @Test
     void testGetAlbumsByArtist_ArtistFound() throws Exception {
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1994, Album.AlbumGenres.BRITPOP, "Definitely Maybe", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?", "https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumServiceImpl.getAlbumsByArtist("Oasis")).thenReturn(albums);
@@ -222,8 +222,8 @@ public class AlbumControllerTests {
     @Test
     void testGetAlbumsByReleaseYear_YearFound() throws Exception {
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumServiceImpl.getAlbumsByReleaseYear(1995)).thenReturn(albums);
@@ -247,8 +247,8 @@ public class AlbumControllerTests {
     @Test
     void testGetAlbumsByGenre_AlbumsFoundInThisGenre() throws Exception {
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?");
+        Album album1 = new Album(1L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "What's the Story Morning Glory?","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumServiceImpl.getAlbumsByGenre(Album.AlbumGenres.BRITPOP)).thenReturn(albums);
@@ -309,8 +309,8 @@ public class AlbumControllerTests {
     @Test
     void testGetAlbumsByName_NameFound() throws Exception {
         List<Album> albums = new ArrayList<>();
-        Album album1 = new Album(1L, "Oasis", 1999, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
-        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe");
+        Album album1 = new Album(1L, "Oasis", 1999, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
+        Album album2 = new Album(2L, "Oasis", 1995, Album.AlbumGenres.BRITPOP, "Definitely Maybe","https://album-images-bucket.s3.eu-west-2.amazonaws.com/Definitely+Maybe.jpeg");
         albums.add(album1);
         albums.add(album2);
         when(mockAlbumServiceImpl.getAlbumsByName("Definitely Maybe")).thenReturn(albums);
