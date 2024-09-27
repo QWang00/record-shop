@@ -3,7 +3,6 @@ package com.northcoders.record_shop.controller;
 import com.northcoders.record_shop.exception.ItemNotFoundException;
 import com.northcoders.record_shop.model.Album;
 import com.northcoders.record_shop.service.AlbumService;
-import com.northcoders.record_shop.service.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,21 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("albums")
 public class AlbumController {
     private final AlbumService albumService;
-    private final S3Service s3Service;
+
 
     @Autowired
-    public AlbumController(AlbumService albumService, S3Service s3Service) {
+    public AlbumController(AlbumService albumService) {
         this.albumService = albumService;
-        this.s3Service = s3Service;
+
     }
 
     @Operation(summary = "Get all albums", description = "Retrieve all albums from the database")
@@ -148,19 +145,19 @@ public class AlbumController {
     }
 
 
-    @Operation(summary = "Upload album image", description = "Upload album cover")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
-    })
-    @PostMapping("/images/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
-        try {
-            String imageUrl = s3Service.uploadFile(file);
-            return new ResponseEntity<>(imageUrl, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    @Operation(summary = "Upload album image", description = "Upload album cover")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Image uploaded successfully"),
+//            @ApiResponse(responseCode = "400", description = "Bad request"),
+//            @ApiResponse(responseCode = "500", description = "Internal server error")
+//    })
+//    @PostMapping("/images/upload")
+//    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) {
+//        try {
+//            String imageUrl = s3Service.uploadFile(file);
+//            return new ResponseEntity<>(imageUrl, HttpStatus.OK);
+//        } catch (Exception e) {
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 }
